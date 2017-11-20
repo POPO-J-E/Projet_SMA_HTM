@@ -264,7 +264,14 @@ public class MyNetwork implements Runnable {
     }
 
     public double getMaxDutyCycle(List<MyColumn> columns){
-        return 3;
+        double max = 0;
+        for (MyColumn c : lstMC) {
+            if(c.getActiveDutyCycle() > max)
+            {
+                max = c.getActiveDutyCycle();
+            }
+        }
+        return max;
     }
 
     public double updateActiveDutyCycle(MyColumn column) {
