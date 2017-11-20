@@ -14,6 +14,14 @@ public class AbstractData<D> {
         this.encodedData = encodedData;
     }
 
+    public D getData() {
+        return data;
+    }
+
+    public boolean[] getEncodedData() {
+        return encodedData;
+    }
+
     @Override
     public String toString() {
         return data + ":" + Helper.getDataString(encodedData);

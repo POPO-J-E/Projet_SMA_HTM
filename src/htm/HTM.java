@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package htm;
+
 import graph.graphstream.GraphStreamBuilder;
 import graph.graphstream.MyGraphStreamEdge;
 import graph.graphstream.MyGraphStreamNode;
@@ -33,10 +34,8 @@ public class HTM {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-
-        System.out.println(new IntEncoder(0,10,5).encode(3).toString());
-
+    public static void main(String[] args)
+    {
         Graph graph = new SingleGraph("graph"); // création du graphe
         graph.setNodeFactory(new NodeFactory<MyGraphStreamNode>() {
 			public MyGraphStreamNode newInstance(String id, Graph graph) {
@@ -57,15 +56,11 @@ public class HTM {
         GraphStreamBuilder gb = new GraphStreamBuilder(graph);
         MyNetwork mn = new MyNetwork(gb, gb);
         
-        mn.buildNetwork(16, 5); // un réseau de démonstration avec 16 entrées et 5 colonnes
+        mn.buildNetwork(0, 10, 5); // un réseau de démonstration avec 16 entrées et 5 colonnes
         graph.display(false);
         
         
         new Thread(mn).start(); // exécution d'un processus d'apprentissage, à définir, pour mn
-        
-        
-        
-        
     }
     
 }

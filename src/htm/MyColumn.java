@@ -23,10 +23,25 @@ public class MyColumn extends AbstractNetworkNode {
      * Pour l'apprentissage, parcourir les synapses en entrée, et faire évoluer les poids synaptiques adéquatement.
      * 
      */
-    
+
+    private double activatedSynapses;
+    private final double THRESHOLD = 3;
     
     public MyColumn(NodeInterface _node) {
         super(_node);
+    }
+
+    public double getActivatedSynapses() {
+        return activatedSynapses;
+    }
+
+    public void setActivatedSynapses(double activatedSynapses) {
+        this.activatedSynapses = activatedSynapses;
+    }
+
+    public boolean isActivated()
+    {
+        return activatedSynapses >= THRESHOLD;
     }
 }
 

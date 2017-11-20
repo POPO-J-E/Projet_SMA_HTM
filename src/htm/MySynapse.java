@@ -34,11 +34,19 @@ public class MySynapse extends AbstractNetworkEdge {
             currentValue = 0;
         }
         
-        if (currentValue >= THRESHOLD) {
+        if (isActivated()) {
             getEdge().setState(EdgeInterface.State.ACTIVATED);
         } else {
             getEdge().setState(EdgeInterface.State.DESACTIVATED);
         }
     }
-    
+
+    public boolean isActivated()
+    {
+        return currentValue >= THRESHOLD;
+    }
+
+    public double getCurrentValue() {
+        return currentValue;
+    }
 }

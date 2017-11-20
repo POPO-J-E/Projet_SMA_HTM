@@ -1,11 +1,11 @@
 package htm;
 
-import graph.Encoder;
+import graph.AbstractEncoder;
 
 /**
  * Created by kifkif on 20/11/2017.
  */
-public class IntEncoder implements Encoder<Integer, IntData> {
+public class IntEncoder extends AbstractEncoder<Integer, IntData> {
 
     private int length;
     private int min;
@@ -28,7 +28,7 @@ public class IntEncoder implements Encoder<Integer, IntData> {
         return max - min;
     }
 
-    private int getLength()
+    public int getLength()
     {
         return buckets + w - 1;
     }
