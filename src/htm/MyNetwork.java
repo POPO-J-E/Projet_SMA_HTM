@@ -46,11 +46,11 @@ public class MyNetwork implements Runnable {
 
         int range = max-min;
         Integer[] dataValues = new Integer[range];
-        values = encoder.encodeDataValues(dataValues);
-
-        for (AbstractData value: values) {
-            System.out.println(value);
+        for (int i = 0; i < range; i++)
+        {
+            dataValues[i] = min+i;
         }
+        values = encoder.encodeDataValues(dataValues);
 
         lastPos = -1;
         
