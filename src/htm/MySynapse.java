@@ -16,7 +16,7 @@ import java.util.Random;
 public class MySynapse extends AbstractNetworkEdge {
     
     private double currentValue = new Random().nextDouble();
-    private final double THRESHOLD = 0.5;
+    private double THRESHOLD = 0.5;
     
     
     protected MySynapse(EdgeInterface _edge) {
@@ -26,14 +26,14 @@ public class MySynapse extends AbstractNetworkEdge {
     
     public void currentValueUdpate(double delta) {
         currentValue += delta;
-        
+
         if (currentValue > 1) {
             currentValue = 1;
         }
         if (currentValue < 0) {
             currentValue = 0;
         }
-        
+
         if (isActivated()) {
             getEdge().setState(EdgeInterface.State.ACTIVATED);
         } else {
@@ -48,5 +48,17 @@ public class MySynapse extends AbstractNetworkEdge {
 
     public double getCurrentValue() {
         return currentValue;
+    }
+
+    public void setCurrentValue(double currentValue) {
+        this.currentValue = currentValue;
+    }
+
+    public double getTHRESHOLD() {
+        return THRESHOLD;
+    }
+
+    public void setTHRESHOLD(double THRESHOLD) {
+        this.THRESHOLD = THRESHOLD;
     }
 }

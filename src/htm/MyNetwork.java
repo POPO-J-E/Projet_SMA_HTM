@@ -7,9 +7,7 @@ package htm;
 
 import graph.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,13 +23,16 @@ public class MyNetwork implements Runnable {
     
     ArrayList<MyNeuron> lstMN;
     ArrayList<MyColumn> lstMC;
+    ArrayList<MyColumn> activeColumns = new ArrayList<MyColumn>();
+    private final int desiredLocalActivity = 2;
+    private double inhibitionRadius;
 
     private AbstractData data;
     private int lastPos;
     private List<AbstractData> values;
     private Random rnd = new Random();
-    
-    
+
+
     public MyNetwork(NodeBuilder _nb, EdgeBuilder _eb) {
         nb = _nb;
         eb = _eb;
@@ -95,8 +96,6 @@ public class MyNetwork implements Runnable {
 //                i--;
 //            }
 //        }
-        
-        
     }
 
     @Override
@@ -183,12 +182,12 @@ public class MyNetwork implements Runnable {
 
             c.setActivatedSynapses(activatedData);
 
-            if (c.isActivated()) {
-                c.getNode().setState(NodeInterface.State.ACTIVATED);
-            } else {
-                c.getNode().setState(NodeInterface.State.DESACTIVATED);
-            }
+            c.getNode().setState(NodeInterface.State.DESACTIVATED);
+            c.setActivated(false);
         }
+
+        inhibition();
+        learning();
 
         try {
             Thread.sleep(1000);
@@ -201,5 +200,110 @@ public class MyNetwork implements Runnable {
     {
         lastPos = (lastPos+1)%values.size();
         data = values.get(lastPos);
+    }
+
+    public void learningColumn(MyColumn column){
+        for (EdgeInterface e : column.getNode().getEdgeIn())
+        {
+            MySynapse synapse = (MySynapse)e.getAbstractNetworkEdge();
+            MyNeuron neuron = (MyNeuron) e.getNodeIn().getAbstractNetworkNode();
+
+            if (neuron.isActivated()) {
+                synapse.currentValueUdpate(0.1);
+            } else {
+                synapse.currentValueUdpate(-0.1);
+            }
+        }
+    }
+
+    public void learning() {
+        for (MyColumn column : activeColumns) {
+            learningColumn(column);
+        }
+
+        for (MyColumn column : lstMC) {
+            column.setMinDutyCycle(0.01 * getMaxDutyCycle(getNeighbors(column)));
+            column.setActiveDutyCycle(updateActiveDutyCycle(column));
+            column.setBoost(boostFunction(column.getBoost(),column.getActiveDutyCycle(),column.getMinDutyCycle()));
+            column.setOverlapDutyCycle(updateOverlapDutyCycle(column));
+
+            if (column.getOverlapDutyCycle() < column.getMinDutyCycle())
+            {
+                increasePermanences(column,0.1*connectedPerm());
+            }
+        }
+
+        inhibitionRadius = averageReceptiveFieldSize();
+    }
+
+    private void increasePermanences(MyColumn column, double v) {
+        for (EdgeInterface e : column.getNode().getEdgeIn())
+        {
+            MySynapse synapse = (MySynapse)e.getAbstractNetworkEdge();
+            synapse.setTHRESHOLD(synapse.getTHRESHOLD()+v);
+        }
+    }
+
+    private double averageReceptiveFieldSize()
+    {
+        double activatedData = 0;
+        for (MyColumn c : lstMC) {
+            for (EdgeInterface e : c.getNode().getEdgeIn()) {
+                MySynapse synapse = (MySynapse)e.getAbstractNetworkEdge();
+                if(synapse.isActivated())
+                {
+                    activatedData++;
+                }
+            }
+        }
+        return activatedData / (double)lstMC.size();
+    }
+
+    private double connectedPerm() {
+        return 0.5;
+    }
+
+    public double getMaxDutyCycle(List<MyColumn> columns){
+        return 3;
+    }
+
+    public double updateActiveDutyCycle(MyColumn column) {
+        return 3;
+    }
+
+    public double updateOverlapDutyCycle(MyColumn column) {
+        return 3;
+    }
+
+    public double boostFunction(double boots, double activeDutyCycle, double minDutyCycle) {
+        return (activeDutyCycle > minDutyCycle) ? 1 : boots+0.1;
+    }
+
+    public void inhibition(){
+        double minLocalActivity = 0;
+
+        Collections.sort(getNeighbors(null), new Comparator<MyColumn>() {
+            @Override
+            public int compare(MyColumn o1, MyColumn o2) {
+                int compare = (o1.getActivatedSynapses() > o2.getActivatedSynapses()) ? 1 : 0;
+                if (compare==0)
+                    compare = (o1.getActivatedSynapses() == o2.getActivatedSynapses()) ? 0 : -1;
+
+                return compare;
+            }
+        });
+
+        for (int i=0;i<desiredLocalActivity;i++)
+        {
+            MyColumn column = lstMC.get(i);
+            activeColumns.add(column);
+            column.setActivated(true);
+            column.getNode().setState(NodeInterface.State.ACTIVATED);
+        }
+    }
+
+    //TODO
+    public List<MyColumn> getNeighbors(MyColumn column){
+        return lstMC;
     }
 }

@@ -25,8 +25,16 @@ public class MyColumn extends AbstractNetworkNode {
      */
 
     private double activatedSynapses;
-    private final double THRESHOLD = 3;
-    
+    private double minDutyCycle;
+    private double activeDutyCycle;
+    private double overlapDutyCycle;
+    private double boost = 1;
+    private boolean activated;
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
     public MyColumn(NodeInterface _node) {
         super(_node);
     }
@@ -41,7 +49,39 @@ public class MyColumn extends AbstractNetworkNode {
 
     public boolean isActivated()
     {
-        return activatedSynapses >= THRESHOLD;
+        return activated;
+    }
+
+    public double getMinDutyCycle() {
+        return minDutyCycle;
+    }
+
+    public void setMinDutyCycle(double minDutyCycle) {
+        this.minDutyCycle = minDutyCycle;
+    }
+
+    public double getActiveDutyCycle() {
+        return activeDutyCycle;
+    }
+
+    public void setActiveDutyCycle(double activeDutyCycle) {
+        this.activeDutyCycle = activeDutyCycle;
+    }
+
+    public double getOverlapDutyCycle() {
+        return overlapDutyCycle;
+    }
+
+    public void setOverlapDutyCycle(double overlapDutyCycle) {
+        this.overlapDutyCycle = overlapDutyCycle;
+    }
+
+    public double getBoost() {
+        return boost;
+    }
+
+    public void setBoost(double boost) {
+        this.boost = boost;
     }
 }
 
