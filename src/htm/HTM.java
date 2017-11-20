@@ -7,7 +7,10 @@ package htm;
 import graph.graphstream.GraphStreamBuilder;
 import graph.graphstream.MyGraphStreamEdge;
 import graph.graphstream.MyGraphStreamNode;
-import org.graphstream.graph.*;
+import org.graphstream.graph.EdgeFactory;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.NodeFactory;
 import org.graphstream.graph.implementations.AbstractGraph;
 import org.graphstream.graph.implementations.SingleGraph;
 
@@ -32,6 +35,7 @@ public class HTM {
      */
     public static void main(String[] args) {
 
+        System.out.println(new IntEncoder(0,10,5).encode(3).toString());
 
         Graph graph = new SingleGraph("graph"); // création du graphe
         graph.setNodeFactory(new NodeFactory<MyGraphStreamNode>() {
