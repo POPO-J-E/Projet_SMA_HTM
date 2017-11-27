@@ -17,6 +17,7 @@ public interface EdgeInterface {
     public static enum State {ACTIVATED, DESACTIVATED}; // on peut définir de nouveaux états, l'affichage associé est à définir dans MyGraphStreamEdge (si GraphStream est utilisé en couche basse)
     
     public void setState(State s);
+    public void setInfos(String infos);
     public void setAbstractNetworkEdge(AbstractNetworkEdge _abstractNetworkEdge);
     public AbstractNetworkEdge getAbstractNetworkEdge();
     

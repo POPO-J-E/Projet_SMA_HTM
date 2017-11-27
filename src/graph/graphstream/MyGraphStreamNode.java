@@ -8,12 +8,13 @@ package graph.graphstream;
 import graph.AbstractNetworkNode;
 import graph.EdgeInterface;
 import graph.NodeInterface;
-import java.util.Iterator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.AbstractEdge;
 import org.graphstream.graph.implementations.AbstractGraph;
 import org.graphstream.graph.implementations.SingleNode;
+
+import java.util.Iterator;
 
 /**
  *
@@ -90,11 +91,16 @@ public class MyGraphStreamNode extends SingleNode implements NodeInterface {
     @Override
     public void setState(NodeInterface.State s) {
             switch (s) {
-                case ACTIVATED : addAttribute("ui.style", "fill-color: red;");
+                case ACTIVATED : addAttribute("ui.style", "fill-color: red; text-alignment: at-right;");
                     break;
-                case DESACTIVATED : addAttribute("ui.style", "fill-color: black;");     
+                case DESACTIVATED : addAttribute("ui.style", "fill-color: black; text-alignment: at-right;");
             }
     }
-    
-    
+
+    @Override
+    public void setInfos(String infos)
+    {
+        addAttribute("ui.label", infos);
+//        addAttribute("shape", new JLabel(infos));
+    }
 }

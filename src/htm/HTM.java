@@ -36,6 +36,7 @@ public class HTM {
      */
     public static void main(String[] args)
     {
+        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
         Graph graph = new SingleGraph("graph"); // création du graphe
         graph.setNodeFactory(new NodeFactory<MyGraphStreamNode>() {
 			public MyGraphStreamNode newInstance(String id, Graph graph) {
@@ -56,9 +57,9 @@ public class HTM {
         GraphStreamBuilder gb = new GraphStreamBuilder(graph);
         MyNetwork mn = new MyNetwork(gb, gb);
         
-        mn.buildNetwork(0, 10, 5); // un réseau de démonstration avec 16 entrées et 5 colonnes
+        mn.buildNetwork(0, 10, 5); // un réseau de démonstration avec 14 entrées et 5 colonnes
+//        mn.buildNetwork(-10, 10, 7); // un réseau de démonstration avec 16 entrées et 5 colonnes
         graph.display(false);
-        
         
         new Thread(mn).start(); // exécution d'un processus d'apprentissage, à définir, pour mn
     }

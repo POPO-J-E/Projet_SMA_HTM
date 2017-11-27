@@ -18,6 +18,7 @@ public interface NodeInterface {
     public static enum State {ACTIVATED, DESACTIVATED}; // on peut définir de nouveaux états, l'affichage associé est à définir dans MyGraphStreamNode (si GraphStream est utilisé en couche basse)
     public void setState(State s);
     public boolean isConnectedTo(NodeInterface dest);
+    public void setInfos(String infos);
     
     public void setPosition(int x, int y);
     

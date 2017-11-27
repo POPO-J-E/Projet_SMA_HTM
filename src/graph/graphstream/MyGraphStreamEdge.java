@@ -44,12 +44,18 @@ public class MyGraphStreamEdge extends AbstractEdge implements EdgeInterface {
     @Override
     public void setState(State s) {
             switch (s) {
-                case ACTIVATED : addAttribute("ui.style", "fill-color: red;");
+                case ACTIVATED : addAttribute("ui.style", "fill-color: red; text-alignment: along; text-background-mode: plain;");
                     break;
-                case DESACTIVATED : addAttribute("ui.style", "fill-color: black;");     
+                case DESACTIVATED : addAttribute("ui.style", "fill-color: black; text-alignment: along; text-background-mode: plain;");
             }
     }
 
+    @Override
+    public void setInfos(String infos)
+    {
+        addAttribute("ui.label", infos);
+//        addAttribute("shape", new JLabel(infos));
+    }
   
     @Override
     public NodeInterface getNodeIn() {

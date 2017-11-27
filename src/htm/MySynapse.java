@@ -7,31 +7,30 @@ package htm;
 
 import graph.AbstractNetworkEdge;
 import graph.EdgeInterface;
-import java.util.Random;
 
 /**
  *
  * @author farmetta
  */
 public class MySynapse extends AbstractNetworkEdge {
+
+    private double permanence;
     
-    private double currentValue = new Random().nextDouble();
-    private double THRESHOLD = 0.5;
     
-    
-    protected MySynapse(EdgeInterface _edge) {
+    protected MySynapse(EdgeInterface _edge, double permanence) {
         super(_edge);
-        currentValueUdpate(0);
+        this.permanence = permanence;
+        updatePermanence(0);
     }
     
-    public void currentValueUdpate(double delta) {
-        currentValue += delta;
+    public void updatePermanence(double delta) {
+        permanence += delta;
 
-        if (currentValue > 1) {
-            currentValue = 1;
+        if (permanence > 1) {
+            permanence = 1;
         }
-        if (currentValue < 0) {
-            currentValue = 0;
+        if (permanence < 0) {
+            permanence = 0;
         }
 
         if (isActivated()) {
@@ -43,22 +42,14 @@ public class MySynapse extends AbstractNetworkEdge {
 
     public boolean isActivated()
     {
-        return currentValue >= THRESHOLD;
+        return MyNetwork.connectedPerm <= permanence;
     }
 
-    public double getCurrentValue() {
-        return currentValue;
+    public double getPermanence() {
+        return permanence;
     }
 
-    public void setCurrentValue(double currentValue) {
-        this.currentValue = currentValue;
-    }
-
-    public double getTHRESHOLD() {
-        return THRESHOLD;
-    }
-
-    public void setTHRESHOLD(double THRESHOLD) {
-        this.THRESHOLD = THRESHOLD;
+    public void setPermanence(double permanence) {
+        this.permanence = permanence;
     }
 }

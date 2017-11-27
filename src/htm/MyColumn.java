@@ -7,6 +7,7 @@ package htm;
 
 import graph.AbstractNetworkNode;
 import graph.NodeInterface;
+import htm.util.AverageCycle;
 
 
 /**
@@ -24,12 +25,14 @@ public class MyColumn extends AbstractNetworkNode {
      * 
      */
 
-    private double activatedSynapses;
+    private double overlap;
     private double minDutyCycle;
-    private double activeDutyCycle;
-    private double overlapDutyCycle;
     private double boost = 1;
     private boolean activated;
+    private AverageCycle activeDutyCycle;
+    private AverageCycle overlapDutyCycle;
+
+    private final static int cycleSize = 100;
 
     public void setActivated(boolean activated) {
         this.activated = activated;
@@ -37,14 +40,16 @@ public class MyColumn extends AbstractNetworkNode {
 
     public MyColumn(NodeInterface _node) {
         super(_node);
+        this.activeDutyCycle = new AverageCycle(cycleSize);
+        this.overlapDutyCycle = new AverageCycle(cycleSize);
     }
 
-    public double getActivatedSynapses() {
-        return activatedSynapses;
+    public double getOverlap() {
+        return overlap;
     }
 
-    public void setActivatedSynapses(double activatedSynapses) {
-        this.activatedSynapses = activatedSynapses;
+    public void setOverlap(double overlap) {
+        this.overlap = overlap;
     }
 
     public boolean isActivated()
@@ -61,19 +66,19 @@ public class MyColumn extends AbstractNetworkNode {
     }
 
     public double getActiveDutyCycle() {
-        return activeDutyCycle;
+        return activeDutyCycle.getAverage();
     }
 
-    public void setActiveDutyCycle(double activeDutyCycle) {
-        this.activeDutyCycle = activeDutyCycle;
+    public void updateActiveDutyCycle(boolean activeDutyCycle) {
+        this.activeDutyCycle.update(activeDutyCycle);
     }
 
     public double getOverlapDutyCycle() {
-        return overlapDutyCycle;
+        return overlapDutyCycle.getAverage();
     }
 
-    public void setOverlapDutyCycle(double overlapDutyCycle) {
-        this.overlapDutyCycle = overlapDutyCycle;
+    public void updateOverlapDutyCycle(boolean overlapDutyCycle) {
+        this.overlapDutyCycle.update(overlapDutyCycle);
     }
 
     public double getBoost() {
