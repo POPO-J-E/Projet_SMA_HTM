@@ -41,6 +41,8 @@ public class MyNetwork implements Runnable {
     private int currentStep = 0;
 
 
+    private boolean noise;
+
     public MyNetwork(NodeBuilder _nb, EdgeBuilder _eb) {
         nb = _nb;
         eb = _eb;
@@ -129,7 +131,7 @@ public class MyNetwork implements Runnable {
             updateInfos();
             System.out.println(inhibitionRadius);
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MyNetwork.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -139,9 +141,27 @@ public class MyNetwork implements Runnable {
     }
 
     private void updateData() {
-        genNextData();
+        boolean[] encodedData;
 
-        boolean[] encodedData = data.getEncodedData();
+        if(learningSteps <= currentStep)
+        {
+            if(noise)
+            {
+                encodedData = data.getEncodedDataWithNoise();
+            }
+            else
+            {
+                genNextData();
+                encodedData = data.getEncodedData();
+            }
+
+            noise = !noise;
+        }
+        else
+        {
+            genNextData();
+            encodedData = data.getEncodedData();
+        }
 
         for (int i = 0; i < encodedData.length; i++) {
             MyNeuron neuron = lstMN.get(i);
