@@ -50,8 +50,11 @@ public class MyNetwork implements Runnable {
     
     
     private static final int DENSITE_INPUT_COLUMNS = 6;
+
+    // Initialisation
     public void buildNetwork(int min, int max, int nbColumns) {
 
+        //création de la liste de données
         Encoder encoder = new IntEncoder(min,max,DENSITE_INPUT_COLUMNS);
         int length = encoder.getLength();
 
@@ -65,7 +68,7 @@ public class MyNetwork implements Runnable {
 
         lastPos = -1;
         
-        // création des entrées
+        // création des neurones entrées
         lstMN = new ArrayList<MyNeuron>();
         for (int i = 0; i < length; i++) {
             NodeInterface ni = nb.getNewNode();
@@ -92,10 +95,12 @@ public class MyNetwork implements Runnable {
 
             int j = 0;
             for (MyNeuron n : lstMN) {
+                //distance au centre de la colonne
                 double d = Math.abs(center - j) / dist;
 
                 if (d < 0.5) {
                     EdgeInterface e = eb.getNewEdge(n.getNode(), c.getNode());
+                    //poids en fonction de la distance au centre
                     MySynapse s = new MySynapse(e, 0.2 * Math.random() + 0.5 - 0.2 * d);
                     e.setAbstractNetworkEdge(s);
                 }
@@ -112,13 +117,17 @@ public class MyNetwork implements Runnable {
     }
 
     private void performRun() {
+        //nouvelle donnée en entrée
         updateData();
 
+        //application de la donnée sur les neurones d'entrée
         overlap();
 
+        //choix des colonnes actives
         inhibition();
 
         if(learningSteps > currentStep) {
+            //apprentissage
             learning();
             try {
                 Thread.sleep(10);
@@ -128,8 +137,8 @@ public class MyNetwork implements Runnable {
         }
         else
         {
+            //affichage du reseau
             updateInfos();
-            System.out.println(inhibitionRadius);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException ex) {
@@ -147,10 +156,12 @@ public class MyNetwork implements Runnable {
         {
             if(noise)
             {
+                //alteration donnée avec du bruit aléatoire
                 encodedData = data.getEncodedDataWithNoise();
             }
             else
             {
+                //donnée suivante
                 genNextData();
                 encodedData = data.getEncodedData();
             }
@@ -163,6 +174,7 @@ public class MyNetwork implements Runnable {
             encodedData = data.getEncodedData();
         }
 
+        //mise a jour des données sur les neurones d'entrée
         for (int i = 0; i < encodedData.length; i++) {
             MyNeuron neuron = lstMN.get(i);
             neuron.setActivated(encodedData[i]);
@@ -172,18 +184,10 @@ public class MyNetwork implements Runnable {
                 if(neuron.isActivated())
                 {
                     neuron.getNode().setState(NodeInterface.State.ACTIVATED);
-
-//                for (EdgeInterface e : neuron.getNode().getEdgeOut()) {
-//                    ((MySynapse) e.getAbstractNetworkEdge()).updatePermanence(1);
-//                }
                 }
                 else
                 {
                     neuron.getNode().setState(NodeInterface.State.DESACTIVATED);
-
-//                for (EdgeInterface e : neuron.getNode().getEdgeOut()) {
-//                    ((MySynapse) e.getAbstractNetworkEdge()).updatePermanence(0);
-//                }
                 }
             }
 
